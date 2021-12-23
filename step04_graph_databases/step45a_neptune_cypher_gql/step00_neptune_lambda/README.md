@@ -1,5 +1,10 @@
 # Neptune with Lambda
 
+## Reading Material
+
+- [Using AWS Lambda functions in Amazon Neptune](https://docs.aws.amazon.com/neptune/latest/userguide/lambda-functions.html)
+- [The Amazon Neptune openCypher HTTPS endpoint](https://docs.aws.amazon.com/neptune/latest/userguide/access-graph-opencypher-queries.html)
+
 ## Steps to code
 
 1. Create new folder using `mkdir step00_neptune_lambda`
