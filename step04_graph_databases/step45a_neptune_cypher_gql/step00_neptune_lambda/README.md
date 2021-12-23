@@ -143,3 +143,4 @@
     ```
 
 14. Deploy the app using `cdk deploy`
+15. Destroy the app `cdk destroy`
