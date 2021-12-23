@@ -1,6 +1,8 @@
-import { Stack, StackProps, Tags } from 'aws-cdk-lib';
+import { CfnOutput, Stack, StackProps, Tags } from 'aws-cdk-lib';
 import { aws_ec2 as ec2 } from 'aws-cdk-lib';
 import { aws_neptune as neptune } from 'aws-cdk-lib';
+import { aws_lambda as lambda } from 'aws-cdk-lib';
+import { aws_apigateway as apigw } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
 export class Step00NeptuneLambdaStack extends Stack {
@@ -56,5 +58,31 @@ export class Step00NeptuneLambdaStack extends Stack {
       availabilityZone: vpc.availabilityZones[0],
     });
     neptuneInstance.addDependsOn(neptuneCluster);
+
+    // Lambda function
+    const handler = new lambda.Function(this, 'Lambda', {
+      functionName: 'lambdafunction',
+      runtime: lambda.Runtime.NODEJS_14_X,
+      code: new lambda.AssetCode('lambdas'),
+      handler: 'index.handler',
+      vpc: vpc,
+      securityGroups: [sgl],
+      environment: {
+        NEPTUNE_ENDPOINT: neptuneCluster.attrEndpoint,
+      },
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+    });
+
+    // Endpoint Output
+    new CfnOutput(this, 'Neptune Endpoint', {
+      value: neptuneCluster.attrEndpoint,
+    });
+
+    // Api gateway
+    const apigateway = new apigw.LambdaRestApi(this, 'api', {
+      handler: handler,
+    });
   }
 }
