@@ -5,7 +5,8 @@
 1. Create new folder using `mkdir step00_neptune_lambda`
 2. Navigate to newly created folder using `cd step00_neptune_lambda`
 3. Create cdk app using `cdk init --language typescript`
-4. Update "./lib/step00_neptune_lambda-stack.ts" to define virtual private cloud which created subnet IPv4 addresses for our net-working.
+4. run `npm run watch` to auto transpile the code
+5. Update "./lib/step00_neptune_lambda-stack.ts" to define virtual private cloud which created subnet IPv4 addresses for our net-working.
 
    ```js
    import { aws_ec2 as ec2 } from 'aws-cdk-lib';
@@ -20,7 +21,7 @@
    });
    ```
 
-5. Update "./lib/step00_neptune_lambda-stack.ts" to create security group as AWS neptune requires one. Create a security group and subnetgroup to ensure lambda and neptune cluster deploy on the same vpc
+6. Update "./lib/step00_neptune_lambda-stack.ts" to create security group as AWS neptune requires one. Create a security group and subnetgroup to ensure lambda and neptune cluster deploy on the same vpc
 
    ```js
    import { Stack } from 'aws-cdk-lib';
@@ -46,7 +47,7 @@
    );
    ```
 
-6. Update "./lib/step00_neptune_lambda-stack.ts" to create cluster, it is same as creating ddb.
+7. Update "./lib/step00_neptune_lambda-stack.ts" to create cluster, it is same as creating ddb.
 
    ```js
    const neptuneCluster = new neptune.CfnDBCluster(this, 'MyCluster', {
@@ -57,7 +58,7 @@
    neptuneCluster.addDependsOn(neptuneSubnet);
    ```
 
-7. Update "./lib/step00_neptune_lambda-stack.ts" to create naptune instance it defines on cloud the configration we want to use
+8. Update "./lib/step00_neptune_lambda-stack.ts" to create naptune instance it defines on cloud the configration we want to use
 
    ```js
    const neptuneInstance = new neptune.CfnDBInstance(this, 'myinstance', {
@@ -68,7 +69,7 @@
    neptuneInstance.addDependsOn(neptuneCluster);
    ```
 
-8. Update "./lib/step00_neptune_lambda-stack.ts" to create lambda function
+9. Update "./lib/step00_neptune_lambda-stack.ts" to create lambda function
 
    ```js
    import { aws_lambda as lambda } from 'aws-cdk-lib';
@@ -88,16 +89,16 @@
    });
    ```
 
-9. Update "./lib/step00_neptune_lambda-stack.ts" to output naptune endpoint
+10. Update "./lib/step00_neptune_lambda-stack.ts" to output naptune endpoint
 
-   ```js
-   import { CfnOutput } from 'aws-cdk-lib';
-   new CfnOutput(this, 'Neptune Endpoint', {
-     value: neptuneCluster.attrEndpoint,
-   });
-   ```
+    ```js
+    import { CfnOutput } from 'aws-cdk-lib';
+    new CfnOutput(this, 'Neptune Endpoint', {
+      value: neptuneCluster.attrEndpoint,
+    });
+    ```
 
-10. Update "./lib/step00_neptune_lambda-stack.ts" to create Api gateway
+11. Update "./lib/step00_neptune_lambda-stack.ts" to create Api gateway
 
     ```js
     import { aws_apigateway as apigw } from 'aws-cdk-lib';
@@ -106,9 +107,9 @@
     });
     ```
 
-11. To create lambda handler code create folder `mkdir lambdas` and navigate to it using `cd lambdas`, Use `yarn init --yes` and install dependancies using `yarn add axios` and `yarn add @types/aws-lambda --save-dev`
+12. To create lambda handler code create folder `mkdir lambdas` and navigate to it using `cd lambdas`, Use `yarn init --yes` and install dependancies using `yarn add axios` and `yarn add @types/aws-lambda --save-dev`
 
-12. Create "lambdas/index.tsx" to create lambda handler
+13. Create "lambdas/index.tsx" to create lambda handler
 
     ```js
     import axios from 'axios';
@@ -141,4 +142,4 @@
     }
     ```
 
-13. Deploy the app using `cdk deploy`
+14. Deploy the app using `cdk deploy`
